@@ -11,6 +11,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
 import { TestErrorsComponent } from '../errors/test-errors/test-errors.component';
 
+
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
@@ -30,8 +31,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                   }
                 }
                 throw modelStateErrors.flat();
-              }else{
+              }else if(typeof(error.error)=='object'){
                 this.toastr.error(error.statusText,error.status);
+              }else{
+                this.toastr.error(error.error,error.status);
               }
               
               break;
