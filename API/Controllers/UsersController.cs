@@ -31,24 +31,24 @@ namespace API.Controllers
             
         }
 
+        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>>GetUsers([FromQuery]UserParams userParams){
-            
-            var user=await _userRepository.GetUserByUsername(User.GetUserName());
-            userParams.CurrentUsername=User.GetUserName();
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
+        {
+            var user = await _userRepository.GetUserByUsername(User.GetUserName());
+            userParams.CurrentUsername = User.GetUserName();
 
-            if(string.IsNullOrEmpty(userParams.Gender))
-                userParams.Gender=user.Gender=="male" ? "female" :"male";
+            if (string.IsNullOrEmpty(userParams.Gender))
+                userParams.Gender= user.Gender== "male" ? "female" : "male";
 
             var users = await _userRepository.GetMembersAsync(userParams);
 
-            Response.AddPAginationHeader(users.CurrentPage,users.PageSize,users.TotalCount,users.TotalPages);
+            Response.AddPAginationHeader(users.CurrentPage, users.PageSize,
+                users.TotalCount, users.TotalPages);
 
-          
             return Ok(users);
         }
-
-        
+      
         [HttpGet("{username}",Name ="GetUser")]
         public async Task<ActionResult<MemberDto>> GetUser(string username){
             return await _userRepository.GetMemberAsync(username);
